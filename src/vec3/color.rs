@@ -1,5 +1,4 @@
-use crate::{ray::hit::Hittable, vec3};
-use crate::ray::Ray;
+use crate::{ray::hit::Hittable, vec3,ray::Ray};
 use std::io;
 pub type Color = vec3::Vec3;
 pub fn write_color(f :&mut dyn io::Write, color : &Color, samples_per_pixel : usize) -> io::Result<()> 

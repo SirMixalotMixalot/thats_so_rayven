@@ -2,6 +2,45 @@ pub mod vec3;
 pub mod camera;
 pub mod ray;
 pub mod shapes;
+
+use rand::Rng;
+use std::{rc::Rc,io::Write};
+use camera::Camera;
+use ray::hit::HittableList;
+use vec3::color::{ray_color,write_color,Color};
+use shapes::Sphere;
+
+pub fn run(height : i32, width : i32,samples : usize) {
+    let mut rng = rand::thread_rng();
+    let cam = Camera::new();
+
+    let mut world = HittableList::new();
+    world.add(Rc::new(Sphere::new((0.,0.,-1.).into(),0.5)));
+    world.add(Rc::new(Sphere::new((0.,-100.5,-1.).into(),100.)));
+    print!("P3\n{} {}\n255\n",width,height);
+    
+    for j in (0..height).rev(){
+       eprint!("\rScanlines remaining : {}",j);
+       std::io::stderr().flush().unwrap();
+
+       for i in 0..width{
+           let mut color = Color::new();
+           for _ in 0..samples {
+            let (u,v) =
+            ( 
+                    (i as f64 + rng.gen::<f64>())  / (width-1) as f64,
+                    (j as f64 + rng.gen::<f64>())/ (height-1) as f64,
+            );
+            let r = cam.get_ray(u,v);
+            color = color + ray_color(r,&world); 
+     
+           }
+           write_color(&mut std::io::stdout(), &color,samples).unwrap()
+       }
+    }
+    eprintln!("\nDone...");
+}
+
 #[cfg(test)]
 mod tests {
     use vec3::Vec3;
