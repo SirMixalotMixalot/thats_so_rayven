@@ -2,7 +2,7 @@ use std::ops::{Add,Mul,Neg,Sub,Div,Index,IndexMut};
 use std::fmt;
 pub mod color;
 use std::error::Error;
-
+use rand::{Rng, distributions::Uniform, prelude::Distribution};
 //====================Error Types==================
 #[derive(Debug)]
 pub struct DivisionByZeroError;
@@ -50,6 +50,16 @@ impl Vec3 {
     }
     pub fn normalized(&self) -> Result<Self,DivisionByZeroError> {
         self / self.len()
+    }
+    pub fn random() -> Self {
+        let mut rng = rand::thread_rng();
+        rng.gen::<[f64;3]>().into()    
+    }
+    pub fn rand_with_range(low : f64, high : f64) -> Self {
+        let mut rng = rand::thread_rng();
+        let between = Uniform::new(low, high);
+        let mut iter  = between.sample_iter(&mut rng).take(3);
+        (iter.next().unwrap(),iter.next().unwrap(),iter.next().unwrap()).into()
     }
 }
 //=====================Ops=====================
