@@ -15,8 +15,8 @@ pub fn run(height : i32, width : i32,samples : usize) {
     let cam = Camera::new();
 
     let mut world = HittableList::new();
-    world.add(Rc::new(Sphere::new((0.,0.,-1.).into(),0.5)));
-    world.add(Rc::new(Sphere::new((0.,-100.5,-1.).into(),100.)));
+    world.push(Rc::new(Sphere::new((0.,0.,-1.).into(),0.5)));
+    world.push(Rc::new(Sphere::new((0.,-100.5,-1.).into(),100.)));
     print!("P3\n{} {}\n255\n",width,height);
     
     for j in (0..height).rev(){

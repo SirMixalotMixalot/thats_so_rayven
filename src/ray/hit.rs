@@ -23,26 +23,16 @@ impl HitRecord {
 pub trait Hittable : Debug {
     fn hit(&self,ray : &Ray, t_min : f64, t_max : f64) -> Option<HitRecord>;
 }
-#[derive(Debug)]
-pub struct HittableList {
-    hittables : Vec<Rc<dyn Hittable>>, 
 
-    
-}
-impl HittableList {
-    pub fn new() -> Self {
-        Self {hittables : vec![]}
-    } 
-    pub fn clear(&mut self) {self.hittables.clear();}
-    pub fn add(&mut self, obj : Rc<dyn Hittable>) {self.hittables.push(obj);}
 
-}
+pub type HittableList = Vec<Rc<dyn Hittable>>;
+
 impl Hittable for HittableList {
 
     fn hit(&self, ray : &Ray, t_min : f64, t_max : f64) -> Option<HitRecord> {
         let mut closest_so_far = t_max;
         let mut rec = None;
-        for obj in &self.hittables {
+        for obj in self {
             if let Some(hr) = obj.hit(ray,t_min,closest_so_far) {
                 closest_so_far = hr.t;
                 rec = Some(hr);
