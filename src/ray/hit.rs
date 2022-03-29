@@ -15,7 +15,7 @@ impl HitRecord {
     pub fn new(p : Point, normal : Vec3, t : f64, dir : &Vec3) -> Self {
         let d = normal.dot(dir);
         let front_face = d < 0.;
-        let normal = if front_face { normal} else { -normal};
+        let normal = if front_face { normal } else { -normal };
         Self {p,normal,t,front_face}
     }
 }
@@ -31,15 +31,15 @@ impl Hittable for HittableList {
 
     fn hit(&self, ray : &Ray, t_min : f64, t_max : f64) -> Option<HitRecord> {
         let mut closest_so_far = t_max;
-        let mut rec = None;
+        let mut record = None;
         for obj in self {
             if let Some(hr) = obj.hit(ray,t_min,closest_so_far) {
                 closest_so_far = hr.t;
-                rec = Some(hr);
+                record = Some(hr);
             }
         }
         
-        rec
+        record
 
     }
 

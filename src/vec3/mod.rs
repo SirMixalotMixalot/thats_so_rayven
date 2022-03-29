@@ -1,4 +1,4 @@
-use std::ops::{Add,Mul,Neg,Sub,Div,Index,IndexMut};
+use std::ops::{Add,Mul,Neg,Sub,Div,Index,IndexMut, AddAssign, MulAssign};
 use std::fmt;
 pub mod color;
 use std::error::Error;
@@ -88,7 +88,20 @@ impl Neg for &Vec3 {
     }
 }
 
-
+impl AddAssign for Vec3 {
+    fn add_assign(&mut self, rhs: Self) {
+        self.coords.iter_mut()
+        .zip(rhs.coords.iter())
+        .for_each(|(p0,p1)| *p0 += *p1);
+    }
+}
+impl MulAssign for Vec3 {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.coords.iter_mut()
+        .zip(rhs.coords.iter())
+        .for_each(|(p0,p1)| *p0 *= *p1);
+    }
+}
 
 impl Mul<f64> for Vec3 {
     type Output = Self;

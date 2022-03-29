@@ -32,7 +32,7 @@ pub fn run(height : i32, width : i32,samples : usize) {
                     (j as f64 + rng.gen::<f64>())/ (height-1) as f64,
             );
             let r = cam.get_ray(u,v);
-            color = color + ray_color(r,&world); 
+            color +=  ray_color(r,&world); 
      
            }
            write_color(&mut std::io::stdout(), &color,samples).unwrap()

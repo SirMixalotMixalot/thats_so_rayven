@@ -16,7 +16,7 @@ pub fn ray_color(ray : Ray,hittable : &dyn Hittable) -> Color {
     
     if let Some(hr) = ray.hit_obj(hittable) {
        
-       return (Color::with_points( hr.normal[0] , hr.normal[1] ,hr.normal[2] ) + (1.,1.,1.).into()) * 0.5; 
+       return (hr.normal + (1.,1.,1.).into()) * 0.5; 
     }
        
     let unit_dir = ray.direction().normalized().unwrap();

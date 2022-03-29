@@ -1,4 +1,4 @@
-use crate::{ray::Ray, vec3::Vec3};
+pub(crate) use crate::{ray::Ray, vec3::Vec3};
 type Point = Vec3;
 pub struct Camera {
     origin : Point,
@@ -20,8 +20,8 @@ impl Camera {
         let origin : Point = (0.,0.,0.).into();
         let horizontal : Vec3 = (view_port_width,0.,0.).into();
         let vertical : Vec3 = (0.,view_port_height,0.).into();
-        let lower_left_corner : Point = origin - (horizontal/2.).unwrap()
-            - (vertical/2.).unwrap() -
+        let lower_left_corner : Point = origin - (horizontal * 0.5)
+            - (vertical * 0.5) -
             (0.,0.,focal_length).into();
         Self {origin,lower_left_corner,horizontal,vertical}
 
