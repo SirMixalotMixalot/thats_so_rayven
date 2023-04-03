@@ -61,6 +61,9 @@ impl Vec3 {
         let mut iter  = between.sample_iter(&mut rng).take(3);
         (iter.next().unwrap(),iter.next().unwrap(),iter.next().unwrap()).into()
     }
+    pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
+        let in_unit_sphere= random
+    }
 }
 //=====================Ops=====================
 impl Add for Vec3 {
@@ -95,11 +98,10 @@ impl AddAssign for Vec3 {
         .for_each(|(p0,p1)| *p0 += *p1);
     }
 }
-impl MulAssign for Vec3 {
-    fn mul_assign(&mut self, rhs: Self) {
-        self.coords.iter_mut()
-        .zip(rhs.coords.iter())
-        .for_each(|(p0,p1)| *p0 *= *p1);
+
+impl MulAssign<f64> for Vec3 {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.coords.iter_mut().for_each(|p| *p *= rhs);
     }
 }
 

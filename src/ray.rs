@@ -18,6 +18,6 @@ impl Ray {
     }
     
     pub fn hit_obj(&self, obj : &dyn Hittable) -> Option<HitRecord> {
-        obj.hit(&self,0.,f64::INFINITY)
+        obj.hit(&self, 0.001,f64::INFINITY)
     }
 }

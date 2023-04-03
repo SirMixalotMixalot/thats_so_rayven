@@ -10,7 +10,7 @@ use ray::hit::HittableList;
 use vec3::color::{ray_color,write_color,Color};
 use shapes::Sphere;
 
-pub fn run(height : i32, width : i32,samples : usize) {
+pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
     let mut rng = rand::thread_rng();
     let cam = Camera::new();
 
@@ -32,7 +32,7 @@ pub fn run(height : i32, width : i32,samples : usize) {
                     (j as f64 + rng.gen::<f64>())/ (height-1) as f64,
             );
             let r = cam.get_ray(u,v);
-            color +=  ray_color(r,&world); 
+            color +=  ray_color(r,&world, depth); 
      
            }
            write_color(&mut std::io::stdout(), &color,samples).unwrap()

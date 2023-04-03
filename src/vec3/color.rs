@@ -1,22 +1,39 @@
 use crate::{ray::hit::Hittable, vec3,ray::Ray};
 use std::io;
+
+use super::Vec3;
 pub type Color = vec3::Vec3;
 pub fn write_color(f :&mut dyn io::Write, color : &Color, samples_per_pixel : usize) -> io::Result<()> 
 {   
     let scale = 1./ samples_per_pixel as f64;
     let c = color * scale;
-    let s = 255.999;
+    let (r,g, b) = c.into();
+    
+    let s = 256.;
+    
     let (min,max) = (0.,0.999);
-    write!(f,"{} {} {}\n",(s * f64::clamp(c.x(),min,max)) as i32,
-                          (s * f64::clamp(c.y(),min,max)) as i32,
-                          (s * f64::clamp(c.z(),min,max)) as i32)
+    write!(f,"{} {} {}\n",(s * f64::clamp(r.sqrt(),min,max)) as i32,
+                          (s * f64::clamp(g.sqrt(),min,max)) as i32,
+                          (s * f64::clamp(b.sqrt(),min,max)) as i32)
 
 }
-pub fn ray_color(ray : Ray,hittable : &dyn Hittable) -> Color {
-    
-    if let Some(hr) = ray.hit_obj(hittable) {
-       
-       return (hr.normal + (1.,1.,1.).into()) * 0.5; 
+fn random_in_unit() -> Vec3 {
+    loop {
+        let p = Vec3::rand_with_range(-1.,1.);
+        if p.len_squared() - 1. <= f64::EPSILON  {
+            break p;
+        }
+
+    }
+}
+pub fn ray_color(ray : Ray,object : &dyn Hittable, depth: u32) -> Color {
+    if depth <= 0 {
+        return Color::new();
+    }
+    if let Some(hr) = ray.hit_obj(object) {
+       let target = hr.p + hr.normal + random_in_unit();
+
+       return ray_color(Ray::new(hr.p, target - hr.p), object, depth - 1) * 0.5; 
     }
        
     let unit_dir = ray.direction().normalized().unwrap();
