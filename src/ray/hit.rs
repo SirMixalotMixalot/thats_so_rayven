@@ -2,21 +2,24 @@ use std::{fmt::Debug, rc::Rc};
 
 use crate::ray::{Ray,Point};
 use crate::vec3::Vec3;
-#[derive(Debug)]
+
+use super::material::Material;
+#[derive(Debug, Clone)]
 pub struct HitRecord {
    pub p : Point,
    pub normal : Vec3,
    pub t : f64,
    pub front_face : bool,
+   pub material : Rc<dyn Material>,
 }
 
 impl HitRecord {
     
-    pub fn new(p : Point, normal : Vec3, t : f64, dir : &Vec3) -> Self {
+    pub fn new(p : Point, normal : Vec3, t : f64, dir : &Vec3, material: Rc<dyn Material>) -> Self {
         let d = normal.dot(dir);
         let front_face = d < 0.;
         let normal = if front_face { normal } else { -normal };
-        Self {p,normal,t,front_face}
+        Self {p,normal,t,front_face, material}
     }
 }
 

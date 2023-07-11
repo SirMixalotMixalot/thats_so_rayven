@@ -1,6 +1,7 @@
 use crate::vec3::Vec3;
 use self::hit::{HitRecord, Hittable};
 pub mod hit;
+pub mod material;
 pub type Point = Vec3;
 pub struct Ray {
     origin : Point,

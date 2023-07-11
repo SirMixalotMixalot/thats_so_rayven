@@ -10,13 +10,42 @@ use ray::hit::HittableList;
 use vec3::color::{ray_color,write_color,Color};
 use shapes::Sphere;
 
+use crate::ray::material::{Metal, Lambertian};
+
 pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
     let mut rng = rand::thread_rng();
     let cam = Camera::new();
 
+    //materials
+    let material_ground = Rc::new(Lambertian {albedo: (0.8,0.8,0.).into()});
+    let material_center = Rc::new(Lambertian{albedo: (0.7, 0.3, 0.3).into()});
+    let material_left = Rc::new(Metal {albedo: (0.8, 0.8, 0.8).into()});
+    let material_right = Rc::new(Metal {albedo: (0.8, 0.6, 0.2).into()});
+
+
+    //
+
     let mut world = HittableList::new();
-    world.push(Rc::new(Sphere::new((0.,0.,-1.).into(),0.5)));
-    world.push(Rc::new(Sphere::new((0.,-100.5,-1.).into(),100.)));
+    world.push(
+        Rc::new(
+            Sphere::new((0.,0.,-1.).into(),0.5, material_center)
+        )
+    );
+    world.push(
+        Rc::new(
+            Sphere::new((0.,-100.5,-1.).into(),100., material_ground)
+        )
+    );
+    world.push(
+        Rc::new(
+            Sphere::new((-1., 0., -1.).into(), 0.5, material_left)
+        )
+    );
+    world.push(
+        Rc::new(
+            Sphere::new((1.,0.,-1.).into(), 0.5, material_right)
+        )
+    );
     print!("P3\n{} {}\n255\n",width,height);
     
     for j in (0..height).rev(){

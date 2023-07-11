@@ -48,8 +48,11 @@ impl Vec3 {
     pub fn len(&self) -> f64 {
         self.len_squared().sqrt()
     }
-    pub fn normalized(&self) -> Result<Self,DivisionByZeroError> {
-        self / self.len()
+    pub fn normalized(&self) -> Self {
+        match self / self.len() {
+            Ok(v) => v,
+            Err(_) => panic!("You divided a vector by zero, nimwit"),
+        }
     }
     pub fn random() -> Self {
         let mut rng = rand::thread_rng();
@@ -61,8 +64,29 @@ impl Vec3 {
         let mut iter  = between.sample_iter(&mut rng).take(3);
         (iter.next().unwrap(),iter.next().unwrap(),iter.next().unwrap()).into()
     }
+    pub fn random_in_unit() -> Vec3 {
+        loop {
+            let p = Vec3::rand_with_range(-1.,1.);
+            if p.len_squared() - 1. <= f64::EPSILON  {
+                break p;
+            }
+    
+        }
+    }
     pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
-        let in_unit_sphere= random
+        let in_unit_sphere= Vec3::random_in_unit();
+        if in_unit_sphere.dot(&normal) > 0.0 {
+            in_unit_sphere
+        }else {
+            -in_unit_sphere
+        }
+    }
+    pub fn is_near_zero(&self) -> bool {
+        let threshold = 1e-8;
+        self.coords.iter().all(|c| *c < threshold)
+    }
+    pub fn reflect(v : &Vec3, n: &Vec3) -> Vec3 {
+        v - (n * 2. * v.dot(n))
     }
 }
 //=====================Ops=====================
@@ -76,6 +100,12 @@ impl Add for &Vec3 {
     type Output = Vec3;
     fn add(self, rhs: &Vec3) -> Self::Output {
         (self[0] + rhs[0], self[1] + rhs[1], self[2] + rhs[2]).into()
+    }
+}
+impl Add<Vec3> for &Vec3 {
+    type Output = Vec3;
+    fn add(self, rhs: Vec3) -> Self::Output {
+        self + &rhs
     }
 }
 impl Neg for Vec3 {
@@ -119,10 +149,23 @@ impl Mul<f64> for &Vec3 {
     }
 }
 
+impl Mul<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn mul(self, rhs: Vec3) -> Self::Output {
+        (self.x() * rhs.x(), self.y() * rhs.y(), self.z() * rhs.z() ).into()
+    }
+}
 impl Sub for Vec3 {
     type Output = Self;
     fn sub(self, rhs : Vec3) -> Self::Output {
         self + (-rhs)
+    }
+}
+impl Sub<Vec3> for &Vec3 {
+    type Output = Vec3;
+    fn sub(self, rhs: Vec3) -> Self::Output {
+        self + (-rhs)
+        
     }
 }
 impl Sub<&Vec3> for &Vec3 {
