@@ -10,17 +10,17 @@ use ray::hit::HittableList;
 use vec3::color::{ray_color,write_color,Color};
 use shapes::Sphere;
 
-use crate::ray::material::{Metal, Lambertian};
+use crate::ray::material::{Metal, Lambertian, Material};
 
 pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
     let mut rng = rand::thread_rng();
     let cam = Camera::new();
 
     //materials
-    let material_ground = Rc::new(Lambertian {albedo: (0.8,0.8,0.).into()});
-    let material_center = Rc::new(Lambertian{albedo: (0.7, 0.3, 0.3).into()});
-    let material_left = Rc::new(Metal {albedo: (0.8, 0.8, 0.8).into()});
-    let material_right = Rc::new(Metal {albedo: (0.8, 0.6, 0.2).into()});
+    let material_ground : Rc<dyn Material> = Rc::new(Lambertian {albedo: (0.8,0.8,0.).into()});
+    let material_center : Rc<dyn Material> = Rc::new(Lambertian{albedo: (0.7, 0.3, 0.3).into()});
+    let material_left : Rc<dyn Material> = Rc::new(Metal {albedo: (0.8, 0.8, 0.8).into()});
+    let material_right : Rc<dyn Material> = Rc::new(Metal {albedo: (0.8, 0.6, 0.2).into()});
 
 
     //
@@ -28,24 +28,25 @@ pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
     let mut world = HittableList::new();
     world.push(
         Rc::new(
-            Sphere::new((0.,0.,-1.).into(),0.5, material_center)
+            Sphere::new((0.,0.,-1.).into(),0.5, Rc::clone(&material_center))
         )
     );
     world.push(
         Rc::new(
-            Sphere::new((0.,-100.5,-1.).into(),100., material_ground)
+            Sphere::new((0.,-100.5,-1.).into(),100., Rc::clone(&material_ground))
         )
     );
     world.push(
         Rc::new(
-            Sphere::new((-1., 0., -1.).into(), 0.5, material_left)
+            Sphere::new((-1., 0., -1.).into(), 0.5, Rc::clone(&material_left))
         )
     );
     world.push(
         Rc::new(
-            Sphere::new((1.,0.,-1.).into(), 0.5, material_right)
+            Sphere::new((1.,0.,-1.).into(), 0.5, Rc::clone(&material_right))
         )
     );
+
     print!("P3\n{} {}\n255\n",width,height);
     
     for j in (0..height).rev(){

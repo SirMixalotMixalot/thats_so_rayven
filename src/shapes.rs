@@ -51,6 +51,6 @@ impl Hittable for Sphere {
       let t = root;
       let p = ray.at(t);
       let normal = ((p - self.centre)/self.radius).unwrap(); // Radius should not be zero
-      Some(HitRecord::new(p, normal, t, &ray.direction(), self.material.clone(),) )
+      Some(HitRecord::new(p, normal, t, &ray.direction(), Rc::clone(&self.material),) )
   }  
 }
