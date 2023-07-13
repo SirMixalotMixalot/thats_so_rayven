@@ -88,6 +88,12 @@ impl Vec3 {
     pub fn reflect(v : &Vec3, n: &Vec3) -> Vec3 {
         v - (n * 2. * v.dot(n))
     }
+    pub fn refract(uv: &Vec3, n: &Vec3, snells_fraction: f64 ) -> Self {
+        let cos_theta = (-uv).dot(n).min(1.);
+        let r_perp = (uv + n * cos_theta) * snells_fraction ;
+        let r_parallel = -n * (1. - r_perp.len_squared()).abs().sqrt();
+        r_parallel + r_perp
+    }
 }
 //=====================Ops=====================
 impl Add for Vec3 {

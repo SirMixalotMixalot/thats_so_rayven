@@ -10,7 +10,7 @@ use ray::hit::HittableList;
 use vec3::color::{ray_color,write_color,Color};
 use shapes::Sphere;
 
-use crate::ray::material::{Metal, Lambertian, Material};
+use crate::ray::material::{Metal, Lambertian, Material, Dielectric};
 
 pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
     let mut rng = rand::thread_rng();
@@ -18,7 +18,7 @@ pub fn run(height : i32, width : i32,samples : usize, depth: u32) {
 
     //materials
     let material_ground : Rc<dyn Material> = Rc::new(Lambertian {albedo: (0.8,0.8,0.).into()});
-    let material_center : Rc<dyn Material> = Rc::new(Lambertian{albedo: (0.7, 0.3, 0.3).into()});
+    let material_center : Rc<dyn Material> = Rc::new(Dielectric{index_of_refraction: 1.5});
     let material_left : Rc<dyn Material> = Rc::new(Metal::new((0.8, 0.8, 0.8).into(), 0.3),);
     let material_right : Rc<dyn Material> = Rc::new(Metal::new( (0.8, 0.6, 0.2).into(), 1.0),);
 
