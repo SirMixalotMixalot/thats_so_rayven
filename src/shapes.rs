@@ -5,7 +5,6 @@ use crate::ray::Point;
 use crate::ray::hit::{HitRecord,Hittable};
 use crate::ray::material::Material;
 
-#[derive(Debug)]
 pub struct Sphere {
   pub  centre : Point,
   pub  radius : f64,

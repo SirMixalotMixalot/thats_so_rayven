@@ -1,15 +1,12 @@
-use std::fmt::Debug;
-
 use crate::camera::Vec3;
 use crate::vec3::color::Color;
 
 use super::hit::HitRecord;
 use super::Ray;
 
-pub trait Material : Debug {
+pub trait Material{
     fn scatter(&self, ray: &Ray, record : HitRecord,) -> Option<(Color,Ray)>;
 }
-#[derive(Debug)]
 pub struct Lambertian {
     pub albedo: Color
 }
@@ -29,7 +26,6 @@ impl Material for Lambertian {
     }
 }
 
-#[derive(Debug)]
 pub struct Metal {
     pub albedo: Color,
     pub fuzz: f64,
@@ -59,7 +55,6 @@ impl Material for Metal {
         }
     }
 }
-#[derive(Debug)]
 pub struct Dielectric {
     pub index_of_refraction: f64,
 }

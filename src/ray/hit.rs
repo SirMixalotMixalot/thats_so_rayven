@@ -1,10 +1,9 @@
-use std::{fmt::Debug, rc::Rc};
-
+use std::rc::Rc;
 use crate::ray::{Ray,Point};
 use crate::vec3::Vec3;
 
 use super::material::Material;
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct HitRecord {
    pub p : Point,
    pub normal : Vec3,
@@ -23,7 +22,7 @@ impl HitRecord {
     }
 }
 
-pub trait Hittable : Debug {
+pub trait Hittable {
     fn hit(&self,ray : &Ray, t_min : f64, t_max : f64) -> Option<HitRecord>;
 }
 
