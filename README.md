@@ -8,4 +8,4 @@ Really just a toy project that allowed me to explore the Rust language and even 
 - Run `cargo run --release >> output.ppm` after configuring the variables and scenes
 
 ## Current Output
-![3 spheres](assets/output.png)
+![3 spheres](assets/ouput.png)
